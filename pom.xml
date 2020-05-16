@@ -42,6 +42,10 @@
 			</exclusions>
 		</dependency>
 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-websocket</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 		</dependency>
@@ -67,11 +71,6 @@
 			<version>${rest.assured.version}</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>com.pi4j</groupId>
-			<artifactId>pi4j-core</artifactId>
-			<version>0.0.5</version>
-		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
@@ -82,7 +81,7 @@
 					<dependency>
 						<groupId>org.springframework</groupId>
 						<artifactId>springloaded</artifactId>
-						<version>${spring-loaded.version}</version>
+						<version>1.2.8.RELEASE</version>
 					</dependency>
 				</dependencies>
 			</plugin>

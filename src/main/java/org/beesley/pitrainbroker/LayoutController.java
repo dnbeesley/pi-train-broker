@@ -2,8 +2,8 @@ package org.beesley.pitrainbroker;
 
 import java.util.List;
 import java.util.Optional;
-import org.beesley.pitrainbroker.controllers.MotorController;
 import org.beesley.pitrainbroker.dao.LineRepository;
+import org.beesley.pitrainbroker.dao.MotorControlRepository;
 import org.beesley.pitrainbroker.dao.NodeRepository;
 import org.beesley.pitrainbroker.dao.TurnOutRepository;
 import org.beesley.pitrainbroker.model.LayoutState;
@@ -14,11 +14,12 @@ import org.beesley.pitrainbroker.model.TurnOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -26,10 +27,10 @@ import org.springframework.web.server.ResponseStatusException;
 @CrossOrigin
 public class LayoutController {
   @Autowired
-  private MotorController motorController;
+  private LineRepository lineRepository;
 
   @Autowired
-  private LineRepository lineRepository;
+  private MotorControlRepository motorControlRepository;
 
   @Autowired
   private NodeRepository nodeRepository;
@@ -46,11 +47,15 @@ public class LayoutController {
     return state;
   }
 
-  @PostMapping("api/motor")
+  @MessageMapping("api/motor")
   @ResponseBody
+  @SendTo("/topic/motor")
   public MotorControl postMotorCommand(MotorControl motorControl) {
-    return motorController.setState(motorControl.getId(), motorControl.getSpeed(),
-        motorControl.isReversed());
+    MotorControl result = motorControlRepository.getOne(motorControl.getId());
+    result.setReversed(motorControl.isReversed());
+    result.setSpeed(motorControl.getSpeed());
+    motorControlRepository.save(result);
+    return result;
   }
 
   @GetMapping("api/layout/line")
