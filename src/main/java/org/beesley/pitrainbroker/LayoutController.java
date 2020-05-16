@@ -14,12 +14,12 @@ import org.beesley.pitrainbroker.model.TurnOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -36,6 +36,9 @@ public class LayoutController {
   private NodeRepository nodeRepository;
 
   @Autowired
+  private SimpMessagingTemplate template;
+
+  @Autowired
   private TurnOutRepository turnOutRepository;
 
   @GetMapping("api/layout")
@@ -47,14 +50,14 @@ public class LayoutController {
     return state;
   }
 
-  @MessageMapping("api/motor")
+  @PostMapping("api/motor")
   @ResponseBody
-  @SendTo("/topic/motor")
   public MotorControl postMotorCommand(MotorControl motorControl) {
     MotorControl result = motorControlRepository.getOne(motorControl.getId());
     result.setReversed(motorControl.isReversed());
     result.setSpeed(motorControl.getSpeed());
     motorControlRepository.save(result);
+    template.convertAndSend("/topic/motor", result);
     return result;
   }
 
