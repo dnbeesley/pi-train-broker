@@ -1,6 +1,6 @@
-package org.beesley.pitrainbroker.dao;
+package org.beesley.pitrain.broker.dao;
 
-import org.beesley.pitrainbroker.model.Node;
+import org.beesley.pitrain.broker.models.Node;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

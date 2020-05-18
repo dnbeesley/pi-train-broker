@@ -1,4 +1,4 @@
-package org.beesley.pitrainbroker.model;
+package org.beesley.pitrain.broker.models;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

@@ -1,8 +1,10 @@
-package org.beesley.pitrainbroker;
+package org.beesley.pitrain.broker;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 
+@ComponentScan("org.beesley.pitrain")
 @SpringBootApplication
 public class App {
   public static void main(String[] args) {

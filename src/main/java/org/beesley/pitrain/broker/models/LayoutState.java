@@ -1,4 +1,4 @@
-package org.beesley.pitrainbroker.model;
+package org.beesley.pitrain.broker.models;
 
 import java.util.List;
 
@@ -6,8 +6,18 @@ import java.util.List;
  * Class containing all the information for a GUI to render the layout.
  */
 public class LayoutState {
+  private int height;
   private List<Line> lines;
   private List<TurnOut> turnOuts;
+  private int width;
+
+  public int getHeight() {
+    return height;
+  }
+
+  public void setHeight(int height) {
+    this.height = height;
+  }
 
   public List<Line> getLines() {
     return lines;
@@ -23,5 +33,13 @@ public class LayoutState {
 
   public void setTurnOuts(List<TurnOut> turnOuts) {
     this.turnOuts = turnOuts;
+  }
+
+  public int getWidth() {
+    return width;
+  }
+
+  public void setWidth(int width) {
+    this.width = width;
   }
 }
