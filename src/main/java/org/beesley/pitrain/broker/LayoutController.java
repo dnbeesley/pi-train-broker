@@ -7,16 +7,15 @@ import org.beesley.pitrain.broker.dao.MotorControlRepository;
 import org.beesley.pitrain.broker.dao.NodeRepository;
 import org.beesley.pitrain.broker.dao.TurnOutRepository;
 import org.beesley.pitrain.broker.models.LayoutState;
-import org.beesley.pitrain.broker.models.Line;
-import org.beesley.pitrain.broker.models.MotorControl;
-import org.beesley.pitrain.broker.models.Node;
-import org.beesley.pitrain.broker.models.TurnOut;
+import org.beesley.pitrain.models.Line;
+import org.beesley.pitrain.models.MotorControl;
+import org.beesley.pitrain.models.Node;
+import org.beesley.pitrain.models.TurnOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,9 +36,6 @@ public class LayoutController {
   private NodeRepository nodeRepository;
 
   @Autowired
-  private SimpMessagingTemplate template;
-
-  @Autowired
   private TurnOutRepository turnOutRepository;
 
   @GetMapping("api/layout")
@@ -57,7 +53,7 @@ public class LayoutController {
   @GetMapping("api/layout/motor-control")
   @ResponseBody
   public List<MotorControl> getAllMotorControls() {
-    return motorControlRepository.findAll();
+    return this.motorControlRepository.findAll();
   }
 
   @GetMapping("api/layout/motor-control/{motorControlId}")
@@ -69,7 +65,7 @@ public class LayoutController {
   @GetMapping("api/layout/line")
   @ResponseBody
   public List<Line> getAllLines() {
-    return lineRepository.findAll();
+    return this.lineRepository.findAll();
   }
 
   @GetMapping("api/layout/line/{lineId}")
@@ -81,7 +77,7 @@ public class LayoutController {
   @GetMapping("api/layout/node")
   @ResponseBody
   public List<Node> getAllNodes() {
-    return nodeRepository.findAll();
+    return this.nodeRepository.findAll();
   }
 
   @GetMapping("api/layout/node/{lineId}")
@@ -93,7 +89,7 @@ public class LayoutController {
   @GetMapping("api/layout/turn-out")
   @ResponseBody
   public List<TurnOut> getAllTurnOuts() {
-    return turnOutRepository.findAll();
+    return this.turnOutRepository.findAll();
   }
 
   @GetMapping("api/layout/turn-out/{turnOutId}")
@@ -105,13 +101,26 @@ public class LayoutController {
   @MessageMapping("/send/motor-control")
   @SendTo("/topic/motor-control")
   public MotorControl sendMotorControlCmd(MotorControl motorControl) {
-    Optional<MotorControl> result = motorControlRepository.findById(motorControl.getId());
+    Optional<MotorControl> result = this.motorControlRepository.findById(motorControl.getId());
     if (result.isPresent()) {
       MotorControl item = result.get();
       item.setReversed(motorControl.isReversed());
       item.setSpeed(motorControl.getSpeed());
       motorControlRepository.save(item);
-      template.convertAndSend("/topic/motor", result);
+      return item;
+    } else {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No matching entity in database.");
+    }
+  }
+
+  @MessageMapping("/send/turn-out")
+  @SendTo("/topic/turn-out")
+  public TurnOut sendTurnOutCmd(TurnOut turnOut) {
+    Optional<TurnOut> result = this.turnOutRepository.findById(turnOut.getId());
+    if (result.isPresent()) {
+      TurnOut item = result.get();
+      item.setTurnedOut(turnOut.isTurnedOut());
+      this.turnOutRepository.save(item);
       return item;
     } else {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No matching entity in database.");

@@ -1,6 +1,8 @@
 package org.beesley.pitrain.broker.models;
 
 import java.util.List;
+import org.beesley.pitrain.models.Line;
+import org.beesley.pitrain.models.TurnOut;
 
 /**
  * Class containing all the information for a GUI to render the layout.
