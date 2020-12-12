@@ -35,18 +35,18 @@ VALUES
 INSERT INTO LINE
 (ID, END_NODE_ID, MOTOR_CONTROL_ID, START_NODE_ID)
 VALUES
-(1, 2, 1, 1),
-(2, 3, 1, 6),
-(3, 7, 2, 4),
-(4, 9, 2, 8),
-(5, 13, 2, 12),
-(6, 6, 1, 14),
-(7, 15, 2, 11),
-(8, 16, 1, 10),
-(9, 17, 1, 18),
-(10, 10, 1, 5),
-(11, 14, 1, 17),
-(12, 5, 1, 2);
+(1, 1, 1, 2),
+(2, 6, 1, 3),
+(3, 4, 2, 7),
+(4, 8, 2, 9),
+(5, 12, 2, 13),
+(6, 14, 1, 6),
+(7, 11, 2, 15),
+(8, 10, 1, 16),
+(9, 18, 1, 17),
+(10, 5, 1, 10),
+(11, 17, 1, 14),
+(12, 2, 1, 5);
 
 INSERT INTO TURN_OUT
 (ID, COMMON_NODE_ID, FORWARD_PIN, FORWARD_SENSOR_PIN, FORWARD_NODE_ID, SENSOR_ADDRESS, TURN_OUT_PIN, TURN_OUT_SENSOR_PIN, TURN_OUT_NODE_ID, TURNED_OUT)
